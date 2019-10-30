@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,14 +14,12 @@ public class AmmoInventoryEntry
     public int amount = 0;
 }
 
-public class Controller : MonoBehaviour
+public class Controller : NetworkBehaviour
 {
     //Urg that's ugly, maybe find a better way
     public static Controller Instance { get; protected set; }
-
     public Camera MainCamera;
     public Camera WeaponCamera;
-    
     public Transform CameraPosition;
     public Transform WeaponPosition;
     
@@ -101,8 +100,26 @@ public class Controller : MonoBehaviour
         m_HorizontalAngle = transform.localEulerAngles.y;
     }
 
+    /*[Client] // called only on client
+    public void SpawnObject(Vector3 location)
+    {
+        CmdSpawn(location);
+    }
+
+    [Command] // runs only on server
+    private void CmdSpawn(Vector3 location)
+    {
+        var obj = (GameObject)Instantiate(this, location, someRotation);
+        NetworkServer.Spawn(obj);
+    }*/
+
     void Update()
     {
+        /*if(!isLocalPlayer){
+            MainCamera.enabled = false;
+            return;
+        }*/
+
         if (CanPause && Input.GetButtonDown("Menu"))
         {
             PauseMenu.Instance.Display();

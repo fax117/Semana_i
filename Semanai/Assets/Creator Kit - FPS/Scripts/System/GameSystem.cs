@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
 #endif
 
 
-public class GameSystem : MonoBehaviour
+public class GameSystem : NetworkBehaviour
 {
     public static GameSystem Instance { get; private set; }
 
@@ -175,6 +176,10 @@ public class GameSystem : MonoBehaviour
 
     void Update()
     {
+        if(!isLocalPlayer){
+            return;
+        }
+        
         if (m_TimerRunning)
         {
             m_Timer += Time.deltaTime;
