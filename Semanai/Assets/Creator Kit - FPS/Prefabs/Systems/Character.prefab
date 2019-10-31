@@ -400,9 +400,10 @@ GameObject:
   - component: {fileID: 1782824343737523952}
   - component: {fileID: 1782824343737523964}
   - component: {fileID: 2076006592}
+  - component: {fileID: 6440172453345161799}
   - component: {fileID: 8990068259807566270}
   - component: {fileID: 7034235684762874132}
-  - component: {fileID: 6440172453345161799}
+  - component: {fileID: 7435425499718718071}
   m_Layer: 12
   m_Name: Character
   m_TagString: Untagged
@@ -535,6 +536,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e775d48fda8c87946865215f18419636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6440172453345161799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782824343737523965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b234ec25bf0e6b43924b87d609fcd14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentsToDisable:
+  - {fileID: 1782824343737523952}
+  - {fileID: 1782824342990945115}
+  - {fileID: 1782824342990945092}
 --- !u!114 &8990068259807566270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,15 +599,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 4
   m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
+  m_SyncRotationAxis: 2
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
   m_SnapThreshold: 5
-  m_InterpolateRotation: 1
+  m_InterpolateRotation: 10
   m_InterpolateMovement: 1
---- !u!114 &6440172453345161799
+--- !u!114 &7435425499718718071
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -599,13 +616,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1782824343737523965}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b234ec25bf0e6b43924b87d609fcd14, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e4fc1de7aae047a4bf138b9498c9b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentsToDisable:
-  - {fileID: 1782824343737523952}
-  - {fileID: 1782824342990945115}
-  - {fileID: 1782824342990945092}
+  m_Target: {fileID: 1782824342990945114}
+  m_ChildIndex: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 1
+  m_RotationSyncCompression: 0
+  m_MovementThreshold: 0.001
+  m_InterpolateRotation: 0.2
+  m_InterpolateMovement: 0
 --- !u!1 &9060404833024405442
 GameObject:
   m_ObjectHideFlags: 0
