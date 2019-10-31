@@ -243,7 +243,7 @@ public class Weapon : MonoBehaviour
         Vector2 spread = spreadRatio * Random.insideUnitCircle;
         
         RaycastHit hit;
-        Ray r = Controller.Instance.MainCamera.ViewportPointToRay(Vector3.one * 0.5f + (Vector3)spread);
+        Ray r = Controller.Instance.WeaponCamera.ViewportPointToRay(Vector3.one * 0.5f + (Vector3)spread);
         Vector3 hitPosition = r.origin + r.direction * 200.0f;
         
         if (Physics.Raycast(r, out hit, 1000.0f, ~(1 << 9), QueryTriggerInteraction.Ignore))

@@ -103,12 +103,13 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-        if (CanPause && Input.GetButtonDown("Menu"))
+        /*
+        if (CanPause && Input.GetButtonDown("Oculus_CrossPlatform_Button4"))
         {
             PauseMenu.Instance.Display();
-        }
+        }*/
         
-        FullscreenMap.Instance.gameObject.SetActive(Input.GetButton("Map"));
+        FullscreenMap.Instance.gameObject.SetActive(OVRInput.Get(OVRInput.Button.Two));
 
         bool wasGrounded = m_Grounded;
         bool loosedGrounding = false;
@@ -139,7 +140,7 @@ public class Controller : MonoBehaviour
         if (!m_IsPaused && !LockControl)
         {
             // Jump (we do it first as 
-            if (m_Grounded && Input.GetButtonDown("Jump"))
+            if (m_Grounded && OVRInput.Get(OVRInput.Button.One))
             {
                 m_VerticalSpeed = JumpSpeed;
                 m_Grounded = false;
@@ -147,7 +148,7 @@ public class Controller : MonoBehaviour
                 FootstepPlayer.PlayClip(JumpingAudioCLip, 0.8f,1.1f);
             }
             
-            bool running = m_Weapons[m_CurrentWeapon].CurrentState == Weapon.WeaponState.Idle && Input.GetButton("Run");
+            bool running = m_Weapons[m_CurrentWeapon].CurrentState == Weapon.WeaponState.Idle && OVRInput.Get(OVRInput.Button.PrimaryThumbstick);
             float actualSpeed = running ? RunningSpeed : PlayerSpeed;
 
             if (loosedGrounding)
@@ -155,7 +156,9 @@ public class Controller : MonoBehaviour
                 m_SpeedAtJump = actualSpeed;
             }
 
+            
             // Move around with WASD
+            /*
             move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             if (move.sqrMagnitude > 1.0f)
                 move.Normalize();
@@ -168,6 +171,7 @@ public class Controller : MonoBehaviour
             m_CharacterController.Move(move);
             
             // Turn player
+            /*
             float turnPlayer =  Input.GetAxis("Mouse X") * MouseSensitivity;
             m_HorizontalAngle = m_HorizontalAngle + turnPlayer;
 
@@ -179,31 +183,30 @@ public class Controller : MonoBehaviour
             transform.localEulerAngles = currentAngles;
 
             // Camera look up/down
+            /*
             var turnCam = -Input.GetAxis("Mouse Y");
             turnCam = turnCam * MouseSensitivity;
             m_VerticalAngle = Mathf.Clamp(turnCam + m_VerticalAngle, -89.0f, 89.0f);
             currentAngles = CameraPosition.transform.localEulerAngles;
             currentAngles.x = m_VerticalAngle;
             CameraPosition.transform.localEulerAngles = currentAngles;
+            */
   
-            m_Weapons[m_CurrentWeapon].triggerDown = Input.GetMouseButton(0);
-
+            m_Weapons[m_CurrentWeapon].triggerDown = OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger);
+        
             Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
 
-            if (Input.GetButton("Reload"))
+            if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger))
                 m_Weapons[m_CurrentWeapon].Reload();
 
-            if (Input.GetAxis("Mouse ScrollWheel") < 0)
-            {
-                ChangeWeapon(m_CurrentWeapon - 1);
-            }
-            else if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            if (OVRInput.Get(OVRInput.Button.Four))
             {
                 ChangeWeapon(m_CurrentWeapon + 1);
+
             }
             
             //Key input to change weapon
-
+            /*
             for (int i = 0; i < 10; ++i)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha0 + i))
@@ -219,7 +222,7 @@ public class Controller : MonoBehaviour
                         ChangeWeapon(num);
                     }
                 }
-            }
+            }*/
         }
 
         // Fall down / gravity
