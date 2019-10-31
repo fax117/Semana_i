@@ -39,8 +39,7 @@ public class GameSystem : MonoBehaviour
         foreach (var prefab in StartPrefabs)
         {
             Instantiate(prefab);
-            StartPrefabs[0].gameObject.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
-            StartPrefabs[0].gameObject.GetComponent<Canvas>().worldCamera = GameObject.Find("GUICamera").GetComponent<Camera>();
+           
         }
         
         PoolSystem.Create();
@@ -49,7 +48,8 @@ public class GameSystem : MonoBehaviour
     void Start()
     {
         WorldAudioPool.Init();
-        
+        StartPrefabs[0].gameObject.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+        StartPrefabs[0].gameObject.GetComponent<Canvas>().worldCamera = GameObject.Find("GUICamera").GetComponent<Camera>();
         RetrieveTargetsCount();
         
 #if UNITY_EDITOR
