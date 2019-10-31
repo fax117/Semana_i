@@ -98,6 +98,7 @@ public class Controller : NetworkBehaviour
 
         m_VerticalAngle = 0.0f;
         m_HorizontalAngle = transform.localEulerAngles.y;
+            
     }
 
     /*[Client] // called only on client
@@ -115,10 +116,10 @@ public class Controller : NetworkBehaviour
 
     void Update()
     {
-        /*if(!isLocalPlayer){
+        if(!isLocalPlayer){
             MainCamera.enabled = false;
             return;
-        }*/
+        }
 
         if (CanPause && Input.GetButtonDown("Menu"))
         {
