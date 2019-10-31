@@ -5,15 +5,28 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/Intro.unity
+    path: Assets/Creator Kit - FPS/Scenes/MainMenu.unity
+    guid: 610e8fb28ec7973478da0dbb618c2cd2
   - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/MainMenu.unity
-  - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/Maze.unity
-  - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/Flyer.unity
-  - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/Shooter360.unity
-  - enabled: 1
-    path: Assets/VRSampleScenes/Scenes/Shooter180.unity
+    path: Assets/Creator Kit - FPS/Scenes/Map1.unity
+    guid: cf8af1738c3cb4b488b72c399f7898f8
+  m_configObjects: {}

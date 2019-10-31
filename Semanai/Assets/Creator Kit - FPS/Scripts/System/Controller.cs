@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,14 +15,27 @@ public class AmmoInventoryEntry
     public int amount = 0;
 }
 
-public class Controller : MonoBehaviour
+[Obsolete]
+public class Controller : NetworkBehaviour
 {
     //Urg that's ugly, maybe find a better way
     public static Controller Instance { get; protected set; }
 
     public Camera MainCamera;
     public Camera WeaponCamera;
-    
+    public Camera GUICamera;
+
+    public GameObject CameraRig;
+
+    public Camera myCam;
+    public Camera leftEye;
+    public Camera rightEye;
+
+    public AudioListener myAudioListener;
+
+
+    public GameObject UI;
+
     public Transform CameraPosition;
     public Transform WeaponPosition;
     
@@ -68,6 +83,12 @@ public class Controller : MonoBehaviour
     
     void Start()
     {
+        if (isLocalPlayer)
+        {
+            CameraRig.GetComponent<OVRManager>().enabled = true;
+        }
+        GameSystem.Instance.StartPrefabs[0] = UI;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -103,13 +124,44 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-        /*
-        if (CanPause && Input.GetButtonDown("Oculus_CrossPlatform_Button4"))
+
+        //Client code
+        if (!isLocalPlayer)
         {
-            PauseMenu.Instance.Display();
-        }*/
-        
-        FullscreenMap.Instance.gameObject.SetActive(OVRInput.Get(OVRInput.Button.Two));
+           CameraRig.SetActive(false);
+            UI.SetActive(false);
+            this.gameObject.GetComponent<OVRDebugInfo>().enabled = false;
+            this.gameObject.GetComponent<OVRSceneSampleController>().enabled = false;
+            this.gameObject.GetComponent<OVRPlayerController>().enabled = false;
+            this.gameObject.GetComponent<Controller>().enabled = false;
+            return;
+        }
+        else {
+            if (leftEye.tag != "MainCamera") {
+                leftEye.tag = "MainCamera";
+                leftEye.enabled = true;
+            }
+            if (rightEye.tag != "MainCamera")
+            {
+                
+                rightEye.tag = "MainCamera";
+                rightEye.enabled = true;
+            }
+            if (myCam.tag != "MainCamera")
+            {
+
+                myCam.tag = "MainCamera";
+                myCam.enabled = true;
+            }
+
+        }
+            /*
+            if (CanPause && Input.GetButtonDown("Oculus_CrossPlatform_Button4"))
+            {
+                PauseMenu.Instance.Display();
+            }*/
+
+            FullscreenMap.Instance.gameObject.SetActive(OVRInput.Get(OVRInput.Button.Two));
 
         bool wasGrounded = m_Grounded;
         bool loosedGrounding = false;
