@@ -649,10 +649,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 7d6fc003-0ec0-4ddf-927f-8269a7ca765a
+  cloudProjectId: 933e61d3-1682-4dc5-8239-69513a5c6037
   framebufferDepthMemorylessMode: 0
   projectName: Semanai
-  organizationId: fax-s-studio
+  organizationId: nanmed
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
