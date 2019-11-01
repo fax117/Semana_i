@@ -400,9 +400,10 @@ GameObject:
   - component: {fileID: 1782824343737523952}
   - component: {fileID: 1782824343737523964}
   - component: {fileID: 2076006592}
+  - component: {fileID: 569656277}
   m_Layer: 12
   m_Name: Character
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -456,6 +457,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -482,6 +484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 1782824342990945115}
   WeaponCamera: {fileID: 1782824341984044443}
+  playerhealth: {fileID: 0}
   CameraPosition: {fileID: 1782824341860796121}
   WeaponPosition: {fileID: 1782824343720584450}
   startingWeapons:
@@ -530,6 +533,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e775d48fda8c87946865215f18419636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &569656277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782824343737523965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d6aeda1a546a8440ab90274c58329a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingHealth: 100
+  currentHealth: 0
+  Slider: {fileID: 0}
+  damageImage: {fileID: 0}
+  deathClip: {fileID: 0}
+  flashSpeed: 5
+  flashColour: {r: 1, g: 0, b: 0, a: 0.1}
 --- !u!1 &9066338771475785965
 GameObject:
   m_ObjectHideFlags: 0

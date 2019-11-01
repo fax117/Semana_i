@@ -13,10 +13,10 @@ public class Target : MonoBehaviour
     PlayerHealth playerHealth;
     public ParticleSystem DestroyedEffect;
 
-    [Header("Audio")]
+    /*[Header("Audio")]
     public RandomPlayer HitPlayer;
-    public AudioSource IdleSource;
-    
+    public AudioSource IdleSource;*/
+
     public bool Destroyed => m_Destroyed;
 
     bool m_Destroyed = false;
@@ -36,16 +36,16 @@ public class Target : MonoBehaviour
             PoolSystem.Instance.InitPool(DestroyedEffect, 16);
         
         m_CurrentHealth = health;
-        if(IdleSource != null)
-            IdleSource.time = Random.Range(0.0f, IdleSource.clip.length);
+        /*if(IdleSource != null)
+            IdleSource.time = Random.Range(0.0f, IdleSource.clip.length);*/
     }
 
     public void Got(float damage)
     {
         m_CurrentHealth -= damage;
         
-        if(HitPlayer != null)
-            HitPlayer.PlayRandom();
+        //if(HitPlayer != null)
+            //HitPlayer.PlayRandom();
         
         if(m_CurrentHealth > 0)
             return;
@@ -53,13 +53,13 @@ public class Target : MonoBehaviour
         Vector3 position = transform.position;
         
         //the audiosource of the target will get destroyed, so we need to grab a world one and play the clip through it
-        if (HitPlayer != null)
+        /*if (HitPlayer != null)
         {
             var source = WorldAudioPool.GetWorldSFXSource();
             source.transform.position = position;
             source.pitch = HitPlayer.source.pitch;
             source.PlayOneShot(HitPlayer.GetRandomClip());
-        }
+        }*/
 
         if (DestroyedEffect != null)
         {
