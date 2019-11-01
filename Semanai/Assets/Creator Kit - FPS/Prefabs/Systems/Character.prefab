@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4774915941844423288}
   - component: {fileID: 1341393321966683688}
-  - component: {fileID: 6214750317520948625}
-  - component: {fileID: 7910102821706733965}
   m_Layer: 0
   m_Name: OVRCameraRig
   m_TagString: Untagged
@@ -49,80 +47,6 @@ MonoBehaviour:
   usePerEyeCameras: 0
   useFixedUpdateForTracking: 0
   disableEyeAnchorCameras: 0
---- !u!114 &6214750317520948625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542273136115646788}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  queueAhead: 1
-  useRecommendedMSAALevel: 1
-  _monoscopic: 0
-  enableAdaptiveResolution: 0
-  minRenderScale: 0.7
-  maxRenderScale: 1
-  _headPoseRelativeOffsetRotation: {x: 0, y: 0, z: 0}
-  _headPoseRelativeOffsetTranslation: {x: 0, y: 0, z: 0}
-  profilerTcpPort: 32419
-  expandMixedRealityCapturePropertySheet: 0
-  enableMixedReality: 0
-  compositionMethod: 0
-  extraHiddenLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  externalCompositionBackdropColorRift: {r: 0, g: 1, b: 0, a: 1}
-  externalCompositionBackdropColorQuest: {r: 0, g: 0, b: 0, a: 0}
-  capturingCameraDevice: 0
-  flipCameraFrameHorizontally: 0
-  flipCameraFrameVertically: 0
-  handPoseStateLatency: 0
-  sandwichCompositionRenderLatency: 0
-  sandwichCompositionBufferedFrames: 8
-  chromaKeyColor: {r: 0, g: 1, b: 0, a: 1}
-  chromaKeySimilarity: 0.6
-  chromaKeySmoothRange: 0.03
-  chromaKeySpillRange: 0.06
-  useDynamicLighting: 0
-  depthQuality: 1
-  dynamicLightingSmoothFactor: 8
-  dynamicLightingDepthVariationClampingValue: 0.001
-  virtualGreenScreenType: 0
-  virtualGreenScreenTopY: 10
-  virtualGreenScreenBottomY: -10
-  virtualGreenScreenApplyDepthCulling: 0
-  virtualGreenScreenDepthTolerance: 0.2
-  mrcActivationMode: 0
-  _trackingOriginType: 0
-  usePositionTracking: 1
-  useRotationTracking: 1
-  useIPDInPositionTracking: 1
-  resetTrackerOnLoad: 0
-  AllowRecenter: 1
-  _reorientHMDOnControllerRecenter: 1
-  LateControllerUpdate: 1
---- !u!114 &7910102821706733965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542273136115646788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5178bc8574ce2bf4388e787a2e2af326, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  opMode: 1
-  resetHmdPoseOnRelease: 1
-  resetHmdPoseByMiddleMouseButton: 1
-  activateKeys: 3201000031010000
-  pitchKeys: 3401000033010000
 --- !u!1 &1256751639722608274
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +505,7 @@ Transform:
   - {fileID: 4970254115867408856}
   - {fileID: 7327007995683557070}
   - {fileID: 4774915941844423288}
-  - {fileID: 3516530932324929511}
+  - {fileID: 1486884164342432396}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -651,9 +575,10 @@ MonoBehaviour:
   leftEye: {fileID: 6612394420324658501}
   rightEye: {fileID: 8515959286684370407}
   myAudioListener: {fileID: 5531700832261862626}
-  UI: {fileID: 3516530932324929239}
+  UI: {fileID: 1486884164342432496}
   CameraPosition: {fileID: 1782824341860796121}
   WeaponPosition: {fileID: 1782824343720584450}
+  rightHand: {fileID: 7054809525703860339}
   startingWeapons:
   - {fileID: 8587774576786866763, guid: 760a5cd9833938442ba8a4b54bfa8148, type: 3}
   - {fileID: 521019951643201760, guid: a7112150bc902aa40a065439ad698c01, type: 3}
@@ -769,7 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   componentsToDisable:
   - {fileID: 1782824343737523952}
-  - {fileID: 3516530932324929520}
+  - {fileID: 1486884164342432397}
 --- !u!114 &1519763218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1701,19 +1626,19 @@ PrefabInstance:
       objectReference: {fileID: 4684100550477570231}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42a0ddb40af1b4a4bab43ed3db529ef5, type: 3}
---- !u!224 &3516530932324929511 stripped
+--- !u!224 &1486884164342432396 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2625390798198164662, guid: 42a0ddb40af1b4a4bab43ed3db529ef5,
     type: 3}
   m_PrefabInstance: {fileID: 3516530932324929082}
   m_PrefabAsset: {fileID: 0}
---- !u!223 &3516530932324929520 stripped
+--- !u!223 &1486884164342432397 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 2625390798198164663, guid: 42a0ddb40af1b4a4bab43ed3db529ef5,
     type: 3}
   m_PrefabInstance: {fileID: 3516530932324929082}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3516530932324929239 stripped
+--- !u!1 &1486884164342432496 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2625390798198164682, guid: 42a0ddb40af1b4a4bab43ed3db529ef5,
     type: 3}

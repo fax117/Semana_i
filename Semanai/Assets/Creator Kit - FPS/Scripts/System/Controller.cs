@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using InputTracking = UnityEngine.XR.InputTracking;
+using Node = UnityEngine.XR.XRNode;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -38,6 +41,9 @@ public class Controller : NetworkBehaviour
 
     public Transform CameraPosition;
     public Transform WeaponPosition;
+
+    public Transform rightHand;
+    Vector3 pos;
     
     public Weapon[] startingWeapons;
 
@@ -153,6 +159,37 @@ public class Controller : NetworkBehaviour
                 myCam.tag = "MainCamera";
                 myCam.enabled = true;
             }
+
+            rightHand.localRotation = InputTracking.GetLocalRotation(Node.RightHand);
+            rightHand.localPosition = InputTracking.GetLocalPosition(Node.RightHand);
+
+            Vector2 primaryAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+
+            if (primaryAxis.y > 0f) {
+                pos += (primaryAxis.y * transform.forward * Time.deltaTime);
+            }
+            if (primaryAxis.y < 0f)
+            {
+                pos += (Mathf.Abs(primaryAxis.y) * -transform.forward * Time.deltaTime);
+            }
+            if (primaryAxis.x > 0f)
+            {
+                pos += (primaryAxis.x * transform.forward * Time.deltaTime);
+            }
+            if (primaryAxis.x < 0f)
+            {
+                pos += (Mathf.Abs(primaryAxis.x) * -transform.forward * Time.deltaTime);
+            }
+
+            transform.position = pos;
+
+            Vector3 euler = transform.rotation.eulerAngles;
+            Vector2 secondaryAxis = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+            euler.y += secondaryAxis.y;
+            transform.rotation = Quaternion.Euler(euler);
+
+            transform.localRotation = Quaternion.Euler(euler);
+
 
         }
             /*
