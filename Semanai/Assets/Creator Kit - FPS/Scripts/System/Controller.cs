@@ -20,7 +20,11 @@ public class Controller : MonoBehaviour
 
     public Camera MainCamera;
     public Camera WeaponCamera;
+
+    public PlayerHealth playerhealth;
     
+    Transform player;
+
     public Transform CameraPosition;
     public Transform WeaponPosition;
     
@@ -64,6 +68,8 @@ public class Controller : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        player = GameObject.FindGameObjectWithTag ("Player").transform;
+        playerhealth = player.GetComponent <PlayerHealth> ();
     }
     
     void Start()
@@ -219,6 +225,11 @@ public class Controller : MonoBehaviour
                         ChangeWeapon(num);
                     }
                 }
+            }
+            if(playerhealth.currentHealth<=0){
+                GameSystem.Instance.StopTimer();
+                GameSystem.Instance.FinishRun();
+                Destroy(gameObject);
             }
         }
 

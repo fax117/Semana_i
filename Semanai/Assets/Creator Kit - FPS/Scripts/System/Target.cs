@@ -6,9 +6,11 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Target : MonoBehaviour
 {
+    Transform player;               // Reference to the player's position.
     public float health = 5.0f;
     public int pointValue;
-
+    UnityEngine.AI.NavMeshAgent nav;  
+    PlayerHealth playerHealth;
     public ParticleSystem DestroyedEffect;
 
     [Header("Audio")]
@@ -23,6 +25,9 @@ public class Target : MonoBehaviour
     void Awake()
     {
         Helpers.RecursiveLayerChange(transform, LayerMask.NameToLayer("Target"));
+        player = GameObject.FindGameObjectWithTag ("Player").transform;
+        playerHealth = player.GetComponent <PlayerHealth> ();
+        nav = GetComponent <UnityEngine.AI.NavMeshAgent> ();
     }
 
     void Start()
@@ -70,4 +75,20 @@ public class Target : MonoBehaviour
        
         GameSystem.Instance.TargetDestroyed(pointValue);
     }
+
+     void Update ()
+    {
+        // If the enemy and the player have health left...
+        if(health> 0 && playerHealth.currentHealth > 0)
+        {
+            // ... set the destination of the nav mesh agent to the player.
+            nav.SetDestination (player.position);
+        }
+        // Otherwise...
+        else
+        {
+            // ... disable the nav mesh agent.
+            nav.enabled = false;
+        }
+    } 
 }
