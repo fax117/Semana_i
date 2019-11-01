@@ -43,7 +43,8 @@ public class Controller : NetworkBehaviour
     public Transform WeaponPosition;
 
     public Transform rightHand;
-    Vector3 pos;
+    public Transform leftHand;
+    Vector3 pos = new Vector3(1.7f, 5.85f, -5.28f);
     
     public Weapon[] startingWeapons;
 
@@ -89,10 +90,6 @@ public class Controller : NetworkBehaviour
     
     void Start()
     {
-        if (isLocalPlayer)
-        {
-            CameraRig.GetComponent<OVRManager>().enabled = true;
-        }
         GameSystem.Instance.StartPrefabs[0] = UI;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -130,17 +127,13 @@ public class Controller : NetworkBehaviour
 
     void Update()
     {
+        bool running = m_Weapons[m_CurrentWeapon].CurrentState == Weapon.WeaponState.Idle && OVRInput.Get(OVRInput.Button.PrimaryThumbstick);
+        float actualSpeed = running ? RunningSpeed : PlayerSpeed;
 
         //Client code
         if (!isLocalPlayer)
         {
-           CameraRig.SetActive(false);
-            UI.SetActive(false);
-            this.gameObject.GetComponent<OVRDebugInfo>().enabled = false;
-            this.gameObject.GetComponent<OVRSceneSampleController>().enabled = false;
-            this.gameObject.GetComponent<OVRPlayerController>().enabled = false;
-            this.gameObject.GetComponent<Controller>().enabled = false;
-            return;
+            Destroy(CameraRig);
         }
         else {
             if (leftEye.tag != "MainCamera") {
@@ -162,171 +155,186 @@ public class Controller : NetworkBehaviour
 
             rightHand.localRotation = InputTracking.GetLocalRotation(Node.RightHand);
             rightHand.localPosition = InputTracking.GetLocalPosition(Node.RightHand);
+            leftHand.localRotation = InputTracking.GetLocalRotation(Node.LeftHand);
+            leftHand.localPosition = InputTracking.GetLocalPosition(Node.LeftHand);
 
             Vector2 primaryAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
 
+            /*
             if (primaryAxis.y > 0f) {
-                pos += (primaryAxis.y * transform.forward * Time.deltaTime);
+                //pos += (primaryAxis.y * transform.forward * Time.deltaTime * actualSpeed);
             }
             if (primaryAxis.y < 0f)
             {
-                pos += (Mathf.Abs(primaryAxis.y) * -transform.forward * Time.deltaTime);
+                //pos += (Mathf.Abs(primaryAxis.y) * -transform.forward * Time.deltaTime * actualSpeed);
             }
             if (primaryAxis.x > 0f)
             {
-                pos += (primaryAxis.x * transform.forward * Time.deltaTime);
+                //pos += (primaryAxis.x * transform.forward * Time.deltaTime * actualSpeed);
             }
             if (primaryAxis.x < 0f)
             {
-                pos += (Mathf.Abs(primaryAxis.x) * -transform.forward * Time.deltaTime);
+                //pos += (Mathf.Abs(primaryAxis.x) * -transform.forward * Time.deltaTime * actualSpeed);
             }
 
             transform.position = pos;
 
+            */
+
+            Vector3 move = Vector3.zero;
+
+            move = new Vector3(primaryAxis.x, 0, primaryAxis.y);
+            if (move.sqrMagnitude > 1.0f)
+                move.Normalize();
+
+            float usedSpeed = m_Grounded ? actualSpeed : m_SpeedAtJump;
+
+            move = move * usedSpeed * Time.deltaTime;
+
+            move = transform.TransformDirection(move);
+            m_CharacterController.Move(move);
+
+
+
+
             Vector3 euler = transform.rotation.eulerAngles;
             Vector2 secondaryAxis = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
-            euler.y += secondaryAxis.y;
+            euler.y += -secondaryAxis.y * 3;
             transform.rotation = Quaternion.Euler(euler);
 
             transform.localRotation = Quaternion.Euler(euler);
 
 
-        }
             /*
-            if (CanPause && Input.GetButtonDown("Oculus_CrossPlatform_Button4"))
-            {
-                PauseMenu.Instance.Display();
-            }*/
+      if (CanPause && Input.GetButtonDown("Oculus_CrossPlatform_Button4"))
+      {
+          PauseMenu.Instance.Display();
+      }*/
 
             FullscreenMap.Instance.gameObject.SetActive(OVRInput.Get(OVRInput.Button.Two));
 
-        bool wasGrounded = m_Grounded;
-        bool loosedGrounding = false;
-        
-        //we define our own grounded and not use the Character controller one as the character controller can flicker
-        //between grounded/not grounded on small step and the like. So we actually make the controller "not grounded" only
-        //if the character controller reported not being grounded for at least .5 second;
-        if (!m_CharacterController.isGrounded)
-        {
-            if (m_Grounded)
+            bool wasGrounded = m_Grounded;
+            bool loosedGrounding = false;
+
+            //we define our own grounded and not use the Character controller one as the character controller can flicker
+            //between grounded/not grounded on small step and the like. So we actually make the controller "not grounded" only
+            //if the character controller reported not being grounded for at least .5 second;
+            if (!m_CharacterController.isGrounded)
             {
-                m_GroundedTimer += Time.deltaTime;
-                if (m_GroundedTimer >= 0.5f)
+                if (m_Grounded)
                 {
-                    loosedGrounding = true;
-                    m_Grounded = false;
-                }
-            }
-        }
-        else
-        {
-            m_GroundedTimer = 0.0f;
-            m_Grounded = true;
-        }
-
-        Speed = 0;
-        Vector3 move = Vector3.zero;
-        if (!m_IsPaused && !LockControl)
-        {
-            // Jump (we do it first as 
-            if (m_Grounded && OVRInput.Get(OVRInput.Button.One))
-            {
-                m_VerticalSpeed = JumpSpeed;
-                m_Grounded = false;
-                loosedGrounding = true;
-                FootstepPlayer.PlayClip(JumpingAudioCLip, 0.8f,1.1f);
-            }
-            
-            bool running = m_Weapons[m_CurrentWeapon].CurrentState == Weapon.WeaponState.Idle && OVRInput.Get(OVRInput.Button.PrimaryThumbstick);
-            float actualSpeed = running ? RunningSpeed : PlayerSpeed;
-
-            if (loosedGrounding)
-            {
-                m_SpeedAtJump = actualSpeed;
-            }
-
-            
-            // Move around with WASD
-            /*
-            move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            if (move.sqrMagnitude > 1.0f)
-                move.Normalize();
-
-            float usedSpeed = m_Grounded ? actualSpeed : m_SpeedAtJump;
-            
-            move = move * usedSpeed * Time.deltaTime;
-            
-            move = transform.TransformDirection(move);
-            m_CharacterController.Move(move);
-            
-            // Turn player
-            /*
-            float turnPlayer =  Input.GetAxis("Mouse X") * MouseSensitivity;
-            m_HorizontalAngle = m_HorizontalAngle + turnPlayer;
-
-            if (m_HorizontalAngle > 360) m_HorizontalAngle -= 360.0f;
-            if (m_HorizontalAngle < 0) m_HorizontalAngle += 360.0f;
-            
-            Vector3 currentAngles = transform.localEulerAngles;
-            currentAngles.y = m_HorizontalAngle;
-            transform.localEulerAngles = currentAngles;
-
-            // Camera look up/down
-            /*
-            var turnCam = -Input.GetAxis("Mouse Y");
-            turnCam = turnCam * MouseSensitivity;
-            m_VerticalAngle = Mathf.Clamp(turnCam + m_VerticalAngle, -89.0f, 89.0f);
-            currentAngles = CameraPosition.transform.localEulerAngles;
-            currentAngles.x = m_VerticalAngle;
-            CameraPosition.transform.localEulerAngles = currentAngles;
-            */
-  
-            m_Weapons[m_CurrentWeapon].triggerDown = OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger);
-        
-            Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
-
-            if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger))
-                m_Weapons[m_CurrentWeapon].Reload();
-
-            if (OVRInput.Get(OVRInput.Button.Four))
-            {
-                ChangeWeapon(m_CurrentWeapon + 1);
-
-            }
-            
-            //Key input to change weapon
-            /*
-            for (int i = 0; i < 10; ++i)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-                {
-                    int num = 0;
-                    if (i == 0)
-                        num = 10;
-                    else
-                        num = i - 1;
-
-                    if (num < m_Weapons.Count)
+                    m_GroundedTimer += Time.deltaTime;
+                    if (m_GroundedTimer >= 0.5f)
                     {
-                        ChangeWeapon(num);
+                        loosedGrounding = true;
+                        m_Grounded = false;
                     }
                 }
-            }*/
-        }
+            }
+            else
+            {
+                m_GroundedTimer = 0.0f;
+                m_Grounded = true;
+            }
 
-        // Fall down / gravity
-        m_VerticalSpeed = m_VerticalSpeed - 10.0f * Time.deltaTime;
-        if (m_VerticalSpeed < -10.0f)
-            m_VerticalSpeed = -10.0f; // max fall speed
-        var verticalMove = new Vector3(0, m_VerticalSpeed * Time.deltaTime, 0);
-        var flag = m_CharacterController.Move(verticalMove);
-        if ((flag & CollisionFlags.Below) != 0)
-            m_VerticalSpeed = 0;
+            Speed = 0;
 
-        if (!wasGrounded && m_Grounded)
-        {
-            FootstepPlayer.PlayClip(LandingAudioClip, 0.8f,1.1f);
+            if (!m_IsPaused && !LockControl)
+            {
+                // Jump (we do it first as 
+                if (m_Grounded && OVRInput.Get(OVRInput.Button.One))
+                {
+                    m_VerticalSpeed = JumpSpeed;
+                    m_Grounded = false;
+                    loosedGrounding = true;
+                    FootstepPlayer.PlayClip(JumpingAudioCLip, 0.8f, 1.1f);
+                }
+
+
+
+
+                if (loosedGrounding)
+                {
+                    m_SpeedAtJump = actualSpeed;
+                }
+
+
+                // Move around with WASD
+                /*
+
+
+                // Turn player
+                /*
+                float turnPlayer =  Input.GetAxis("Mouse X") * MouseSensitivity;
+                m_HorizontalAngle = m_HorizontalAngle + turnPlayer;
+
+                if (m_HorizontalAngle > 360) m_HorizontalAngle -= 360.0f;
+                if (m_HorizontalAngle < 0) m_HorizontalAngle += 360.0f;
+
+                Vector3 currentAngles = transform.localEulerAngles;
+                currentAngles.y = m_HorizontalAngle;
+                transform.localEulerAngles = currentAngles;
+
+                // Camera look up/down
+                /*
+                var turnCam = -Input.GetAxis("Mouse Y");
+                turnCam = turnCam * MouseSensitivity;
+                m_VerticalAngle = Mathf.Clamp(turnCam + m_VerticalAngle, -89.0f, 89.0f);
+                currentAngles = CameraPosition.transform.localEulerAngles;
+                currentAngles.x = m_VerticalAngle;
+                CameraPosition.transform.localEulerAngles = currentAngles;
+                */
+
+                m_Weapons[m_CurrentWeapon].triggerDown = OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger);
+
+                Speed = move.magnitude / (PlayerSpeed * Time.deltaTime);
+
+                if (OVRInput.Get(OVRInput.Button.SecondaryHandTrigger))
+                    m_Weapons[m_CurrentWeapon].Reload();
+
+                if (OVRInput.GetDown(OVRInput.Button.Four))
+                {
+                    ChangeWeapon(m_CurrentWeapon + 1);
+
+                }
+
+                //Key input to change weapon
+                /*
+                for (int i = 0; i < 10; ++i)
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+                    {
+                        int num = 0;
+                        if (i == 0)
+                            num = 10;
+                        else
+                            num = i - 1;
+
+                        if (num < m_Weapons.Count)
+                        {
+                            ChangeWeapon(num);
+                        }
+                    }
+                }*/
+            }
+
+            // Fall down / gravity
+            m_VerticalSpeed = m_VerticalSpeed - 10.0f * Time.deltaTime;
+            if (m_VerticalSpeed < -10.0f)
+                m_VerticalSpeed = -10.0f; // max fall speed
+            var verticalMove = new Vector3(0, m_VerticalSpeed * Time.deltaTime, 0);
+            var flag = m_CharacterController.Move(verticalMove);
+            if ((flag & CollisionFlags.Below) != 0)
+                m_VerticalSpeed = 0;
+
+            if (!wasGrounded && m_Grounded)
+            {
+                FootstepPlayer.PlayClip(LandingAudioClip, 0.8f, 1.1f);
+            }
+
+
         }
+      
     }
 
     public void DisplayCursor(bool display)
